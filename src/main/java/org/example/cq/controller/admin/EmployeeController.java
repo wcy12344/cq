@@ -1,10 +1,11 @@
-package org.example.cq.controller;
+package org.example.cq.controller.admin;
 
 import cn.dev33.satoken.stp.StpUtil;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cq.common.ErrorCode;
 import org.example.cq.common.Result;
+import org.example.cq.constant.MessageConstant;
 import org.example.cq.model.dto.employee.EmployeeDTO;
 import org.example.cq.model.dto.employee.EmployeeLoginDTO;
 import org.example.cq.model.entity.Employee;
@@ -17,29 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/admin/employee")
 public class EmployeeController {
     @Resource
 
     private EmployeeService employeeService;
 
+    /**
+     * 新增员工
+     *
+     * @param employeeDTO
+     */
     @PostMapping
-    public Result<String> save(@RequestBody EmployeeDTO employeeAddRequest) {
-        log.info("新增员工: {}", employeeAddRequest);
-//        Employee employee = new Employee();
-//        BeanUtils.copyProperties(employeeAddRequest, employee);
-//        employee.setCreateTime(LocalDateTime.now());
-//        employee.setUpdateTime(LocalDateTime.now());
-//        employee.setCreateUser(StpUtil.getLoginIdAsLong());
-//        employeeService.save(employee);
-        return Result.success("成功");
+    public Result<String> save(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("新增员工: {}", employeeDTO);
+        employeeService.save(employeeDTO);
+        return Result.success("操作成功");
     }
 
     /**
      * 员工登录
      *
-     * @params employeeLoginDTO
-     * @return EmployeeLoginVO
+     * @param employeeLoginDTO
      */
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
@@ -58,8 +58,6 @@ public class EmployeeController {
 
     /**
      * 员工退出
-     *
-     * @return
      */
     @PostMapping("/logout")
     public Result<String> logout() {

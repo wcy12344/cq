@@ -1,10 +1,12 @@
 package org.example.cq.service.impl;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cq.common.PageResult;
 import org.example.cq.constant.MessageConstant;
+import org.example.cq.constant.PasswordConstant;
 import org.example.cq.constant.StatusConstant;
 import org.example.cq.mapper.EmployeeMapper;
 import org.example.cq.model.dto.employee.EmployeeDTO;
@@ -12,8 +14,11 @@ import org.example.cq.model.dto.employee.EmployeeLoginDTO;
 import org.example.cq.model.dto.employee.EmployeePageQueryDTO;
 import org.example.cq.model.entity.Employee;
 import org.example.cq.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
 
 @Service
 @Slf4j
@@ -45,7 +50,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void save(EmployeeDTO employeeDTO) {
-
+        Employee employee = new Employee();
+        // 拷贝对象属性
+        BeanUtils.copyProperties(employeeDTO, employee);
+        employee.setPassword(DigestUtils.md5DigestAsHex((SALT + PasswordConstant.DEFAULT_PASSWORD).getBytes()));
+        employee.setStatus(StatusConstant.ENABLE);
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setCreateUser(StpUtil.getLoginIdAsLong());
+        employee.setUpdateUser(StpUtil.getLoginIdAsLong());
+        try {
+            employeeMapper.insert(employee);
+        } catch (Exception e) {
+            throw new RuntimeException(MessageConstant.ACCOUNT_ALREADY_EXIST);
+        }
     }
 
     @Override

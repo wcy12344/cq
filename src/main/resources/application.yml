@@ -8,10 +8,11 @@ spring:
     url: jdbc:mysql://localhost:3306/sky_take_out
     username: root
     password: 1008611a
-mybatis-plus:
+mybatis:
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.example.cq.model.entity
 sa-token:
   # token 名称（同时也是 cookie 名称）
   token-name: satoken
