@@ -2,6 +2,8 @@ package org.example.cq.service.impl;
 
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cq.common.PageResult;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -68,7 +71,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public PageResult<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        return null;
+        PageHelper.startPage(employeePageQueryDTO.getCurrent(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+
+        return new PageResult<>(total, records);
     }
 
     @Override
