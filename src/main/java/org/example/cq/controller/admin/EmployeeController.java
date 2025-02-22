@@ -39,6 +39,15 @@ public class EmployeeController {
         employeeService.save(employeeDTO);
         return SaResult.ok("操作成功");
     }
+    /**
+     * 启用/禁用员工
+     */
+    @PutMapping("/status/{status}")
+    public SaResult startOrStop(@PathVariable Integer status, @RequestParam Long id) {
+        log.info("启用/禁用员工: {}", id);
+        employeeService.startOrStop(status, id);
+        return SaResult.ok("操作成功");
+    }
 
     /**
      * 员工登录

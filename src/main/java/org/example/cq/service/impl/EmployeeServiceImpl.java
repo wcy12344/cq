@@ -10,6 +10,7 @@ import org.example.cq.common.PageResult;
 import org.example.cq.constant.MessageConstant;
 import org.example.cq.constant.PasswordConstant;
 import org.example.cq.constant.StatusConstant;
+import org.example.cq.exception.BaseException;
 import org.example.cq.mapper.EmployeeMapper;
 import org.example.cq.model.dto.employee.EmployeeDTO;
 import org.example.cq.model.dto.employee.EmployeeLoginDTO;
@@ -37,16 +38,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee emp = employeeMapper.getByUsername(username);
 
         if(emp == null) {
-            throw new RuntimeException(MessageConstant.ACCOUNT_NOT_FOUND);
+            throw new BaseException(1, MessageConstant.ACCOUNT_NOT_FOUND);
         }
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
 
         if(!emp.getPassword().equals(encryptPassword)) {
-            throw new RuntimeException(MessageConstant.PASSWORD_ERROR);
+            throw new BaseException(1,MessageConstant.PASSWORD_ERROR);
         }
 
         if(emp.getStatus() == StatusConstant.DISABLE) {
-            throw new RuntimeException(MessageConstant.ACCOUNT_LOCKED);
+            throw new BaseException(1,MessageConstant.ACCOUNT_LOCKED);
         }
         return emp;
     }
@@ -81,7 +82,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void startOrStop(Integer status, long id) {
-
+        Employee employee = Employee.builder().id(id).status(status).build();
+        employeeMapper.update(employee);
     }
 
     @Override

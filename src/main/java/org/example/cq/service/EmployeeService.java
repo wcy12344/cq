@@ -39,7 +39,7 @@ public interface EmployeeService {
      *
      * @return
      */
-    void startOrStop(Integer status, long id);
+    void  startOrStop(Integer status, long id);
 
     /**
      * 根据id查询员工
