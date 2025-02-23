@@ -1,9 +1,7 @@
 package org.example.cq.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +18,7 @@ public class Employee implements Serializable {
     private Long id; // 主键
     private String username; // 用户名
     private String name; // 姓名
+    @Getter(onMethod_ = {@JsonIgnore})
     private String password; // 密码
     private String phone; // 手机号
     private String sex; // 性别

@@ -20,7 +20,29 @@ public class EmployeeController {
     @Resource
 
     private EmployeeService employeeService;
+    @PutMapping
+    public SaResult updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("更新员工信息：{}", employeeDTO);
+        employeeService.update(employeeDTO);
+        return SaResult.ok("更新成功");
+    }
 
+    /**
+     * 获取单个员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public SaResult getById(@PathVariable long id) {
+        Employee employee = employeeService.getById(id);
+        return SaResult.data(employee);
+    }
+
+    /**
+     * 分页查询员工信息
+     * @param employeePageQueryDTO
+     * @return
+     */
     @GetMapping("/page")
     public SaResult page(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("分页查询员工信息: {}", employeePageQueryDTO);

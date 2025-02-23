@@ -2,6 +2,7 @@ package org.example.cq.service.impl;
 
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
@@ -87,12 +88,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getById(long id) {
-        return null;
+    public Employee  getById(long id) {
+        Employee employee = employeeMapper.selectById(id);
+        if(employee == null) {
+            throw new BaseException(1, "员工不存在");
+        }
+        return employee;
     }
 
     @Override
     public void update(EmployeeDTO employeeDTO) {
-
+        Employee employee = new Employee();
+        BeanUtil.copyProperties(employeeDTO, employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(StpUtil.getLoginIdAsLong());
+        employeeMapper.update(employee);
     }
 }
