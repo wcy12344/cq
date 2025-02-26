@@ -5,8 +5,10 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.example.cq.annotation.AutoFill;
 import org.example.cq.model.dto.employee.EmployeePageQueryDTO;
 import org.example.cq.model.entity.Employee;
+import org.example.cq.model.enums.OperationType;
 
 @Mapper
 public interface  EmployeeMapper {
@@ -28,6 +30,7 @@ public interface  EmployeeMapper {
             "(username, name, password, phone, sex, id_number, status, create_time, update_time, create_user, update_user) " +
             "values " +
             "(#{username}, #{name}, #{password}, #{phone}, #{sex}, #{idNumber}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
+    @AutoFill(OperationType.INSERT)
     void insert(Employee employee);
 
     /**
@@ -43,6 +46,7 @@ public interface  EmployeeMapper {
      * 根据id修改员工状态
      * @param employee
      */
+    @AutoFill(OperationType.UPDATE)
     void update(Employee employee);
 
     /**

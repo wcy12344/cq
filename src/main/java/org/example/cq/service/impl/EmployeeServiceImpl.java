@@ -32,23 +32,24 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeMapper employeeMapper;
 
     public static final String SALT = "wcy";
+
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String password = employeeLoginDTO.getPassword();
         String username = employeeLoginDTO.getUsername();
 
         Employee emp = employeeMapper.getByUsername(username);
 
-        if(emp == null) {
+        if (emp == null) {
             throw new BaseException(1, MessageConstant.ACCOUNT_NOT_FOUND);
         }
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
 
-        if(!emp.getPassword().equals(encryptPassword)) {
-            throw new BaseException(1,MessageConstant.PASSWORD_ERROR);
+        if (!emp.getPassword().equals(encryptPassword)) {
+            throw new BaseException(1, MessageConstant.PASSWORD_ERROR);
         }
 
-        if(emp.getStatus() == StatusConstant.DISABLE) {
-            throw new BaseException(1,MessageConstant.ACCOUNT_LOCKED);
+        if (emp.getStatus() == StatusConstant.DISABLE) {
+            throw new BaseException(1, MessageConstant.ACCOUNT_LOCKED);
         }
         return emp;
     }
@@ -60,10 +61,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         BeanUtils.copyProperties(employeeDTO, employee);
         employee.setPassword(DigestUtils.md5DigestAsHex((SALT + PasswordConstant.DEFAULT_PASSWORD).getBytes()));
         employee.setStatus(StatusConstant.ENABLE);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setCreateUser(StpUtil.getLoginIdAsLong());
-        employee.setUpdateUser(StpUtil.getLoginIdAsLong());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateUser(StpUtil.getLoginIdAsLong());
+//        employee.setUpdateUser(StpUtil.getLoginIdAsLong());
         try {
             employeeMapper.insert(employee);
         } catch (Exception e) {
@@ -88,9 +89,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee  getById(long id) {
+    public Employee getById(long id) {
         Employee employee = employeeMapper.selectById(id);
-        if(employee == null) {
+        if (employee == null) {
             throw new BaseException(1, "员工不存在");
         }
         return employee;
@@ -100,8 +101,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtil.copyProperties(employeeDTO, employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(StpUtil.getLoginIdAsLong());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(StpUtil.getLoginIdAsLong());
         employeeMapper.update(employee);
     }
 }
